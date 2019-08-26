@@ -8,9 +8,8 @@
 #include <sys/stat.h>
 #include <sys/wait.h>
 
-/* MARK NAME Seu Nome Aqui */
-/* MARK NAME Nome de Outro Integrante Aqui */
-/* MARK NAME E Etc */
+/* MARK NAME Danilo Pimentel de Carvalho Costa */
+/* MARK NAME Breno Tanure */
 
 /****************************************************************
  * Shell xv6 simplificado
@@ -36,7 +35,7 @@ struct execcmd {
 };
 
 struct redircmd {
-  int type;          // < ou > 
+  int type;          // < ou >
   struct cmd *cmd;   // o comando a rodar (ex.: um execcmd)
   char *file;        // o arquivo de entrada ou saída
   int mode;          // o modo no qual o arquivo deve ser aberto
@@ -63,7 +62,7 @@ runcmd(struct cmd *cmd)
 
   if(cmd == 0)
     exit(0);
-  
+
   switch(cmd->type){
   default:
     fprintf(stderr, "tipo de comando desconhecido\n");
@@ -99,7 +98,7 @@ runcmd(struct cmd *cmd)
     fprintf(stderr, "pipe nao implementado\n");
     /* MARK END task4 */
     break;
-  }    
+  }
   exit(0);
 }
 
@@ -126,11 +125,19 @@ main(void)
     /* MARK START task1 */
     /* TAREFA1: O que faz o if abaixo e por que ele é necessário?
      * Insira sua resposta no código e modifique o fprintf abaixo
-     * para reportar o erro corretamente. */
+     * para reportar o erro corretamente.
+     *
+     * RESPOSTA para TAREFA1: O if abaixo checa se é o comando
+     * "cd", que altera o diretório atual para o diretório
+     * especificado. Ele é necessário para fazer com que o
+     * diretório mude para o processo atual. Se fizéssemos um
+     * fork para executar o comando "cd", o diretório seria
+     * alterado para o processo filho, e não para o processo pai.
+    */
     if(buf[0] == 'c' && buf[1] == 'd' && buf[2] == ' '){
       buf[strlen(buf)-1] = 0;
       if(chdir(buf+3) < 0)
-        fprintf(stderr, "reporte erro\n");
+        fprintf(stderr, "Ocorreu um erro ao tentar mudar de diretório.\n");
       continue;
     }
     /* MARK END task1 */
@@ -146,7 +153,7 @@ int
 fork1(void)
 {
   int pid;
-  
+
   pid = fork();
   if(pid == -1)
     perror("fork");
@@ -208,7 +215,7 @@ gettoken(char **ps, char *es, char **q, char **eq)
 {
   char *s;
   int ret;
-  
+
   s = *ps;
   while(s < es && strchr(whitespace, *s))
     s++;
@@ -233,7 +240,7 @@ gettoken(char **ps, char *es, char **q, char **eq)
   }
   if(eq)
     *eq = s;
-  
+
   while(s < es && strchr(whitespace, *s))
     s++;
   *ps = s;
@@ -244,7 +251,7 @@ int
 peek(char **ps, char *es, char *toks)
 {
   char *s;
-  
+
   s = *ps;
   while(s < es && strchr(whitespace, *s))
     s++;
@@ -258,7 +265,7 @@ struct cmd *parseexec(char**, char*);
 
 /* Copiar os caracteres no buffer de entrada, comeando de s ate es.
  * Colocar terminador zero no final para obter um string valido. */
-char 
+char
 *mkcopy(char *s, char *es)
 {
   int n = es - s;
@@ -337,7 +344,7 @@ parseexec(char **ps, char *es)
   int tok, argc;
   struct execcmd *cmd;
   struct cmd *ret;
-  
+
   ret = execcmd();
   cmd = (struct execcmd*)ret;
 
