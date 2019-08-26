@@ -85,7 +85,8 @@ runcmd(struct cmd *cmd)
     /* MARK START task3
      * TAREFA3: Implemente codigo abaixo para executar
      * comando com redirecionamento. */
-    fprintf(stderr, "redir nao implementado\n");
+    rcmd->fd = open(rcmd->file,rcmd->mode);
+    dup2(rcmd->fd, cmd->type == '>' ? 1 : 0);
     /* MARK END task3 */
     runcmd(rcmd->cmd);
     break;
@@ -370,4 +371,7 @@ parseexec(char **ps, char *es)
 }
 
 // vim: expandtab:ts=2:sw=2:sts=2
+
+
+
 

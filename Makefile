@@ -5,3 +5,9 @@ compile:
 
 run:
 	./myshell.out
+
+test:
+	./myshell.out < test.sh
+
+check:
+	./grade.sh
