@@ -9,7 +9,7 @@
 #include <sys/wait.h>
 
 /* MARK NAME Danilo Pimentel de Carvalho Costa */
-/* MARK NAME Breno Tanure */
+/* MARK NAME Breno Tanure Prata */
 
 /****************************************************************
  * Shell xv6 simplificado

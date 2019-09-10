@@ -9,19 +9,63 @@ material da Internet nem obtiveram código de terceiros.
 
 2. Membros do grupo e alocação de esforço
 
-Preencha as linhas abaixo com o nome e o e-mail dos integrantes do
-grupo.  Substitua XX pela contribuição de cada membro do grupo no
-desenvolvimento do trabalho.
-
-Nome <email@domain.br> XX%
-Nome <email@domain.br> XX%
-Nome <email@domain.br> XX%
+Breno Tanure Prata <brenotpr@gmail.com> 50%
+Danilo Pimentel de Carvalho Costa <danilo.pimentel97@gmail.com> 50%
 
 3. Referências bibliográficas
 
-Adicione aqui as referências bibliográficas.
+- https://linux.die.net/man/2/pipe
+- https://linux.die.net/man/2/dup2
+- https://linux.die.net/man/2/close
+- https://linux.die.net/man/2/open
+- https://linux.die.net/man/2/wait
+- https://linux.die.net/man/3/exit
+- “Fundamentos de Sistemas Operacionais”, 8a Edição, Silberschatz, Galvin e Gagne, Ed.     LTD
 
-4. Estruturas de dados
+4 Estruturas de dados e algoritmos utilizados
 
-Descreva e justifique as estruturas de dados e algoritmos utilizados
-em sua solução.
+4.1 Estruturas de dados
+
+execcmd:
+Responsável por armazenar os argumentos do comando a ser executado. Os argumentos são armazenados no campo argv, que contém o comando e seus parâmetros, nesta ordem.
+
+redircmd:
+Responsável por indicar qual comando vai ser rodado, um arquivo de I/O e o modo no qual ele será aberto, e o número de descritor do arquivo (file descriptor) que deve ser usado. Com essa estrutura é possível redirecionar a saída do programa para um arquivo ou o conteúdo do arquivo para a entrada do programa.
+
+pipecmd:
+Responsável por definir a separação dos comandos do pipe, contendo ponteiros para estruturas de comando que podem ser do execcmd, do redircmd, ou de outro pipecmd.
+4.2 Algoritmos
+
+task2:
+int execvp(const char *file, char *const argv[]):
+A função procura um arquivo com o nome do primeiro argumento em cada diretório listado na variável PATH. O segundo argumento fornece um array de ponteiros para strings que terminam em nulo, que representam a lista de argumentos disponível para o novo programa.
+
+task3:
+int open(const char *path, int oflag, ... ):
+Estabelece uma conexão entre um arquivo e um descritor de arquivo. É responsável por criar uma descrição de arquivo aberto e um descritor a ela relacionado. Esse descritor é usado por funções de entrada e saída para realizarem manipulações no arquivo aberto, dadas as devidas restrições fornecidas ao chamar a função.
+
+int dup2(int oldfd, int newfd):
+A função faz o descritor de arquivos fornecido pelo segundo argumento (newfd) ser uma cópia do descritor do primeiro argumento (oldfd) e fecha newfd caso necessário. Caso oldfd seja inválido, ocorre falha e o newfd não é fechado. Caso contrário e ambos os descritores sejam iguais, a função apenas retorna newfd, sem modificá-lo. Após as operações dessa função, ambos os descritores são livres para serem usados de modo intercambiável.
+
+task4:
+int pipe(int pipefd[2]):
+Cria um pipe, que é um canal de dados unidirecional usado para comunicações entre processos. O argumento que a função recebe é um array com descritores de arquivo referentes aos dois extremos do pipe, o de leitura e o de escrita, respectivamente dados por pipefd[0] e pipefd[1]. Os dados escritos no extremo de escrita são armazenados em um buffer no kernel até que o outro extremo do pipe leia-os.
+
+int fork1(void):
+Realiza um fork (cria um processo filho) e retorna um erro caso ocorra falha nessa execução. Nesse caso a função é necessária pois necessita-se rodar um comando da esquerda primeiro e fazer com que ele escreva de um lado do pipe. Depois, é necessário fazer um processo filho para ler os dados escritos.
+
+pid_t wait(int *status):
+Necessário para fazer o processo pai esperar o seu filho terminar de ser executado, visto que é necessário obter a saída de um lado do pipe para que o outro possa rodar.
+
+int close(int fd):
+Fecha um descritor de arquivo, de modo que ele não se refira a arquivo algum e possa ser reutilizado futuramente. Caso o descritor fd seja o último a se referir a um dado arquivo aberto, os recursos a esse relacionados são desalocados; caso fd seja o último a se referir a um arquivo removido, esse é deletado.
+	Foi usado nessa etapa do código para assegurar recursos e desalocar os descritores 	de arquivo e deixá-los livres para serem reutilizados.
+
+int dup2(int oldfd, int newfd):
+A função foi usada para substituir o stdin ou o stdout pelos descritores de arquivo. O programa, assim, ao tentar ler do stdin e escrever no stdout realize essas operações nos arquivos desejados com a comunicação por pipe.
+
+void runcmd(struct cmd *cmd):
+Foi usado para que o processo pai possa ler do pipe e o filho escrever no pipe.
+
+void exit(int status):
+Causa o término de um processo e retorna o valor do status ao seu pai. Foi usado nessa etapa para terminar o processo filho e permitir que o pai, que está esperando por sua conclusão, possa ser executado.
