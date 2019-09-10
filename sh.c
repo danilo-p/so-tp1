@@ -102,10 +102,13 @@ runcmd(struct cmd *cmd)
       close(p[1]);
       dup2(p[0], 0);
       runcmd(pcmd->right);
+      close(p[0]);
     } else {
       close(p[0]);
       dup2(p[1], 1);
       runcmd(pcmd->left);
+      close(p[1]);
+      exit(0);
     }
     /* MARK END task4 */
     break;
